@@ -1,0 +1,29 @@
+
+
+url-path = ""
+http-port="18081"
+
+
+# 缓存模式 1 gcache 2 gredis
+cache-mode = 1
+debug=true
+
+# 数据库连接
+[database]
+   [[database.default]]
+        host     = "8.130.28.97"
+        port     = "33106"
+        user     = "root"
+        pass     = "#123#456"
+        name     = "my"
+        type     = "mysql"
+        role     = "master"
+        charset  = "utf8"
+        priority = "1"
+        debug  = true
+
+[redis]
+#    disk  = "127.0.0.1:6379,0"
+#    cache = "127.0.0.1:6379,1"
+
+
