@@ -7,17 +7,19 @@ import (
 )
 
 type RuleRecord struct {
-	Id      int   	`gorm:"column:id"`
+	Id      int   	    `gorm:"primary_key" json:"id"`
 	Name	string		`gorm:"column:rule_name",`
+	Type	string		`gorm:"column:rule_type",`
 	Fn      string		`gorm:"column:rule_fn",`
+	Gn      string		`gorm:"column:rule_gn",`
 	Interval  int		`gorm:"column:rule_interval",`
 	Alert     string	`gorm:"column:rule_alert",`
 	Expr 	 string		`gorm:"column:rule_expr",`
 	For      string		`gorm:"column:rule_for",`
-	Note 	 string		`gorm:"column:note,omitempty",`
+	Note 	 string		`gorm:"column:note",`
 	State    int             `gorm:"column:state"`
-	CreatedAt     *time.Time `gorm:"column:created_at"`
-	UpdatedAt     *time.Time `gorm:"column:updated_at"`
+	CreatedAt     time.Time `gorm:"column:created_at"`
+	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
 
 
@@ -26,7 +28,7 @@ func (*RuleRecord) TableName() string {
 }
 
 func (r *RuleRecord) QueryAll(db *gorm.DB, onlyValid bool) ([]RuleRecord, error){
-	records := []RuleRecord{}
+	var records []RuleRecord
 	if onlyValid {
 		db.Where("state = 1" ).Find(&records)
 	}else{
@@ -36,9 +38,11 @@ func (r *RuleRecord) QueryAll(db *gorm.DB, onlyValid bool) ([]RuleRecord, error)
 	return records, nil
 }
 
-func (r *RuleRecord) GetOneByGroupKey(db *gorm.DB, record RuleRecord) *RuleRecord {
-	db.Where("rule_name = ? AND rule_fn = ?", record.Name, record.Fn).First(&record)
-	return &record
+
+
+func (r *RuleRecord) GetsByGroupKey(db *gorm.DB, ruleName string, ruleFn string, records *[]RuleRecord) *[]RuleRecord {
+	db.Where("rule_name = ? AND rule_fn = ?", ruleName, ruleFn).Find(records)
+	return records
 }
 
 func (r *RuleRecord) UpdatesByIds(db *gorm.DB, Ids []int, toUpdateMap map[string]interface{} ) {
@@ -46,12 +50,13 @@ func (r *RuleRecord) UpdatesByIds(db *gorm.DB, Ids []int, toUpdateMap map[string
 }
 
 func (r *RuleRecord) Add(db *gorm.DB, record RuleRecord) int {
-	db.Create(record)
+	db.Create(&record)
+	db.NewRecord(record)
 	return record.Id
 }
 
 func (r *RuleRecord) Update(db *gorm.DB, record RuleRecord) int {
-	db.Save(record)
+	db.Save(&record)
 	return record.Id
 }
 

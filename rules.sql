@@ -22,10 +22,12 @@ DROP TABLE IF EXISTS `t_rules`;
 CREATE TABLE `t_rules` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '规则ID',
   `rule_name` varchar(255) DEFAULT NULL COMMENT '规则名称',
+  `rule_type` varchar(20) DEFAULT NULL COMMENT '规则类型，{record,alert}',
   `rule_fn` varchar(255) DEFAULT NULL COMMENT '规则文件名(为兼容Prometheus配置文件管理模式)',
+  `rule_gn` varchar(255) DEFAULT NULL COMMENT '规则组名(为兼容Prometheus配置文件管理模式)',
   `rule_interval` int(10) DEFAULT NULL COMMENT '规则运算间隔',
   `rule_alert` varchar(60) DEFAULT NULL COMMENT '规则告警',
-  `rule_expr` varchar(255) DEFAULT NULL COMMENT '规则表达式',
+  `rule_expr` text DEFAULT NULL COMMENT '规则表达式',
   `rule_for` varchar(20) DEFAULT NULL COMMENT '规则持续时长阈值',
   `note` varchar(255) DEFAULT '' COMMENT '规则说明',
   `state` int(4) NOT NULL DEFAULT '1' COMMENT '状态, 1-有效;2-无效',

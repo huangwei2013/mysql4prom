@@ -12,8 +12,8 @@ type RuleLabelRecord struct {
 	Key      string		`gorm:"column:label_key",`
 	Value      string		`gorm:"column:label_value",`
 	State    int             `gorm:"column:state"`
-	CreatedAt     *time.Time `gorm:"column:created_at"`
-	UpdatedAt     *time.Time `gorm:"column:updated_at"`
+	CreatedAt     time.Time `gorm:"column:created_at"`
+	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
 
 
@@ -22,7 +22,7 @@ func (*RuleLabelRecord) TableName() string {
 }
 
 func (r *RuleLabelRecord) QueryByRuleId(db *gorm.DB, onlyValid bool, ruleId int) (*[]RuleLabelRecord, error){
-	records := []RuleLabelRecord{}
+	var records []RuleLabelRecord
 	if onlyValid {
 		db.Where(&RuleLabelRecord{State :1, RuleId: ruleId}).Find(&records)
 	}else{
@@ -45,7 +45,8 @@ func (r *RuleLabelRecord) UpdatesByIds(db *gorm.DB, Ids []int, toUpdateMap map[s
 }
 
 func (r *RuleLabelRecord) Add(db *gorm.DB, record RuleLabelRecord)  int {
-	db.Create(record)
+	db.Create(&record)
+	db.NewRecord(record)
 	return record.Id
 }
 

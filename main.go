@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"mysql4prom/config"
 	"time"
 
 	_ "mysql4prom/bak"
@@ -25,9 +26,8 @@ func InitDBByGorm(dbUrl string)  (*gorm.DB, error){
 
 
 func RunService(ctx context.Context){
-	dbUrl := "root:#123#456@tcp(8.130.28.97:33106)/my?charset=utf8&parseTime=true"
 
-	db, err := InitDBByGorm(dbUrl)
+	db, err := InitDBByGorm(config.DBUrl)
 	if err != nil || db == nil{
 		fmt.Println(err)
 		return

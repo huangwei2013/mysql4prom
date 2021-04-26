@@ -11,10 +11,10 @@ debug=true
 # 数据库连接
 [database]
    [[database.default]]
-        host     = "8.130.28.97"
-        port     = "33106"
-        user     = "root"
-        pass     = "#123#456"
+        host     = "数据库IP"
+        port     = "数据库端口"
+        user     = "数据库账号"
+        pass     = "数据库密码"
         name     = "my"
         type     = "mysql"
         role     = "master"

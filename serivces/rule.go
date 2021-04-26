@@ -19,7 +19,7 @@ type Rule4Prom struct {
 
 
 func (r *Rule4Prom) GetAllRules(db *gorm.DB, onlyValid bool) ([]Rule4Prom, error){
-	rules := []Rule4Prom{}
+	var rules []Rule4Prom
 
 	var model *models.RuleRecord
 	ruleRecords, errRule := model.QueryAll(db, onlyValid)
@@ -42,7 +42,7 @@ func (r *Rule4Prom) GetAllRules(db *gorm.DB, onlyValid bool) ([]Rule4Prom, error
 		}
 
 		rules = append(rules,  Rule4Prom{
-			Name: r.Name,
+			Name: r.Gn,//该字段Promethues实际用作GroupName
 			Fn: r.Fn,
 			Interval: r.Interval,
 			Alert: r.Alert,
@@ -64,14 +64,24 @@ func (r *Rule4Prom) AddRules(db *gorm.DB, rules []Rule4Prom) error {
 	modelRuleAnnotation := models.RuleAnnotationRecord{}
 
 	for _, rule := range rules {
+
+		ruleType := "alert"
+		if len(rule.For) == 0 {
+			ruleType = "record"
+		}
+
 		ruleRecord := models.RuleRecord{
-			Name: rule.Name,
+			Name: rule.Alert,
+			Type: ruleType,
 			Fn: rule.Fn,
+			Gn: rule.Name,
 			Interval: rule.Interval,
 			Alert: rule.Alert,
 			Expr: rule.Expr,
 			For: rule.For,
 			State: 1,
+			//CreatedAt: time.Now(),
+			//UpdatedAt: time.Now(),
 		}
 		ruleId := modelRule.Add(db, ruleRecord)
 
@@ -99,8 +109,6 @@ func (r *Rule4Prom) AddRules(db *gorm.DB, rules []Rule4Prom) error {
 
 	return nil
 }
-
-
 
 
 func (r *Rule4Prom) UpdateRules(db *gorm.DB, rules []Rule4Prom) error {
