@@ -31,4 +31,4 @@ go run main.go
 
 # 资源
 [收集了很多prometheus规则](https://awesome-prometheus-alerts.grep.to/)
-[UI]()
+[配套UI](https://github.com/huangwei2013/mysql4promUI)
